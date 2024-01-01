@@ -3,14 +3,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
-public class http_server_single_thread {
+public class http_server_thread_pool {
     private final static String FILENAME = "src/165kb.png";
     private final static int WORKING_TIME = 20 * 1000000;// ms2ns
 
     public static void main(String[] arg) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(3245), 1024);
         server.createContext("/png", new ImageHandler());
+        // server.setExecutor(Executors.newScheduledThreadPool(32));
+        server.setExecutor(Executors.newFixedThreadPool(128));
         server.start();
     }
 
